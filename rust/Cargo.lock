@@ -298,6 +298,47 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
+name = "demo-common"
+version = "0.1.0"
+dependencies = [
+ "boltffi",
+ "serde",
+]
+
+[[package]]
+name = "demo-core"
+version = "0.1.0"
+dependencies = [
+ "boltffi",
+ "demo-common",
+ "demo-http",
+ "demo-macros",
+ "reqwest",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "uniffi",
+]
+
+[[package]]
+name = "demo-http"
+version = "0.1.0"
+dependencies = [
+ "reqwest",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "demo-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "displaydoc"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -796,47 +837,6 @@ dependencies = [
  "cfg-if",
  "futures-util",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "kora-common"
-version = "0.1.0"
-dependencies = [
- "boltffi",
- "serde",
-]
-
-[[package]]
-name = "kora-core"
-version = "0.1.0"
-dependencies = [
- "boltffi",
- "kora-common",
- "kora-http",
- "kora-macros",
- "reqwest",
- "serde_json",
- "thiserror",
- "tokio",
- "uniffi",
-]
-
-[[package]]
-name = "kora-http"
-version = "0.1.0"
-dependencies = [
- "reqwest",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "kora-macros"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]

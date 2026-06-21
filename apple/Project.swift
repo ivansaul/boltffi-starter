@@ -1,13 +1,13 @@
 import ProjectDescription
 
 let project = Project(
-    name: "Kora",
+    name: "Demo",
     targets: [
         .target(
-            name: "KoraMac",
+            name: "DemoMac",
             destinations: .macOS,
             product: .app,
-            bundleId: "dev.tuist.mac.Kora",
+            bundleId: "dev.tuist.mac.demo",
             deploymentTargets: .macOS("14.0"),
             infoPlist: .default,
             buildableFolders: [
@@ -15,26 +15,26 @@ let project = Project(
                 "macos/Resources",
             ],
             dependencies: [
-                .external(name: "KoraCore"),
+                .external(name: "DemoCore"),
                 .sdk(name: "SystemConfiguration", type: .framework, status: .required),
             ]
         ),
         .target(
-            name: "KoraMacTests",
+            name: "DemoMacTests",
             destinations: .macOS,
             product: .unitTests,
-            bundleId: "dev.tuist.mac.KoraTests",
+            bundleId: "dev.tuist.mac.demoTests",
             infoPlist: .default,
             buildableFolders: [
                 "macos/Tests"
             ],
-            dependencies: [.target(name: "KoraMac")]
+            dependencies: [.target(name: "DemoMac")]
         ),
         .target(
-            name: "KoraIOS",
+            name: "DemoIOS",
             destinations: .iOS,
             product: .app,
-            bundleId: "dev.tuist.ios.Kora",
+            bundleId: "dev.tuist.ios.demo",
             deploymentTargets: .iOS("17.0"),
             infoPlist: .default,
             buildableFolders: [
@@ -42,7 +42,7 @@ let project = Project(
                 "ios/Resources",
             ],
             dependencies: [
-                .external(name: "KoraCore"),
+                .external(name: "DemoCore"),
                 .sdk(name: "SystemConfiguration", type: .framework, status: .required),
             ]
         ),

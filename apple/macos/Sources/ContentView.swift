@@ -1,4 +1,4 @@
-import KoraCore
+import DemoCore
 import SwiftUI
 
 struct ContentView: View {

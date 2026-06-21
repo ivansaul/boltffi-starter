@@ -1,5 +1,5 @@
-use kora_common::joke::Joke;
-use kora_http::{HttpClient, NetworkError};
+use demo_common::joke::Joke;
+use demo_http::{HttpClient, NetworkError};
 
 #[boltffi::error]
 #[derive(Debug, Clone, thiserror::Error)]
@@ -68,7 +68,7 @@ impl JokeManager {
         self.service.random_joke().await
     }
 
-    #[kora_macros::tokio_ffi]
+    #[demo_macros::tokio_ffi]
     pub async fn random_joke2(&self) -> Result<Joke, JokeError> {
         self.service.random_joke().await
     }
