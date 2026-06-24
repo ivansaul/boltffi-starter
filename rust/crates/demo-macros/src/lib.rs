@@ -4,7 +4,7 @@ use syn::spanned::Spanned;
 use syn::{ItemFn, parse_macro_input};
 
 #[proc_macro_attribute]
-pub fn tokio_ffi(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn tokio_runtime(_attr: TokenStream, item: TokenStream) -> TokenStream {
     // 1. Parseamos la función sobre la que se colocó el atributo
     let mut input_fn = parse_macro_input!(item as ItemFn);
 
@@ -12,7 +12,7 @@ pub fn tokio_ffi(_attr: TokenStream, item: TokenStream) -> TokenStream {
     if input_fn.sig.asyncness.is_none() {
         return syn::Error::new(
             input_fn.sig.span(),
-            "El atributo #[tokio_ffi] solo puede aplicarse a funciones 'async'",
+            "El atributo #[tokio_runtime] solo puede aplicarse a funciones 'async'",
         )
         .to_compile_error()
         .into();
