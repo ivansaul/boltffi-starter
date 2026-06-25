@@ -13,7 +13,7 @@ impl QuotesService {
     #[tracing::instrument(err(Debug), skip(self))]
     pub async fn random_quote(&self) -> Result<Quote, QuotesError> {
         self.client
-            .get::<Quote>("https://api.quotable.io/random")
+            .get::<Vec<Quote>>("https://zenquotes.io/api/random")
             .await
             .map_err(|error| match error {
                 HttpError::NotFound => QuotesError::Unavailable,
@@ -21,6 +21,7 @@ impl QuotesService {
                 HttpError::Decode(_) => QuotesError::InvalidResponse,
                 _ => QuotesError::Unknown(format!("{:?}", error)),
             })
+            .and_then(|quotes| quotes.into_iter().next().ok_or(QuotesError::Unavailable))
     }
 }
 
@@ -33,7 +34,7 @@ mod tests {
     async fn test_random_quote() -> Result<(), Box<dyn std::error::Error>> {
         let service = QuotesService::new(HttpClient::new());
         let quote = service.random_quote().await?;
-        dbg!(&quote);
+        assert!(!quote.content.is_empty());
         Ok(())
     }
 }

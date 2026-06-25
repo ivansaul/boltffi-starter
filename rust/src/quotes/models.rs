@@ -4,10 +4,13 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Quote {
-    #[serde(rename = "_id")]
+    #[serde(default)]
     pub id: String,
+    #[serde(rename = "q")]
     pub content: String,
+    #[serde(rename = "a")]
     pub author: String,
+    #[serde(default)]
     pub tags: Vec<String>,
 }
 
