@@ -5,22 +5,30 @@ struct ContentView: View {
     @State private var vm: QuotesViewModel = .init()
 
     var body: some View {
-        Text("Hello, from Rust!!")
-            .padding()
-            .task { await vm.getRandom() }
+        @Bindable var vm2 = vm
+        VStack {
+            AsyncValueView(state: vm.state) { quote in
+                QuoteView(quote: quote)
+            } loading: {
+                ProgressView()
+            } error: { error in
+                Text(error.localizedDescription)
+            }
 
-        Text(vm.quote.content)
-            .padding()
-
-        Button("Random") {
-            print("DEBUG: random")
-            Task { await vm.getRandom() }
+            Button("Random") {
+                Task { await vm.getRandom() }
+            }
+            .buttonStyle(.bordered)
         }
+        .navigationTitle("BoltFFI - Rust")
+        .task { await vm.getRandom() }
     }
 }
 
 #Preview {
-    ContentView()
+    NavigationStack {
+        ContentView()
+    }
 }
 
 @MainActor
@@ -28,18 +36,50 @@ struct ContentView: View {
 final class QuotesViewModel {
     @ObservationIgnored
     private let dataService: QuotesClient = .init()
-
-    private(set) var quote: Quote = .placeHolder()
-    private(set) var errorMessage: String?
+    private(set) var state: AsyncValue<Quote> = .idle
 
     func getRandom() async {
-        print("DEBUG: ffi")
+        state = .loading
         do {
-            quote = try await dataService.randomQuote()
-            print(quote)
-        } catch let error as DemoCoreError {
-            print("DEBUG: \(error.localizedDescription)")
-            errorMessage = error.localizedDescription
-        } catch {}
+            let randomQuote = try await dataService.randomQuote()
+            state = .data(randomQuote)
+            print(randomQuote)
+        } catch {
+            state = .error(error)
+        }
     }
+}
+
+struct QuoteView: View {
+    let quote: Quote
+
+    var body: some View {
+        VStack {
+            Text(quote.content)
+                .italic()
+                .font(.title3)
+
+            Text(quote.author)
+                .italic()
+                .bold()
+                .font(.callout)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.top, 5.0)
+        }
+        .padding()
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(.gray, lineWidth: 2)
+        )
+        .padding()
+    }
+}
+
+#Preview {
+    QuoteView(quote: Quote(
+        id: "123",
+        content: "Do Something. If it works, do more of it. If it doesn't, do something else.",
+        author: "Franklin D. Roosevelt",
+        tags: []
+    ))
 }
