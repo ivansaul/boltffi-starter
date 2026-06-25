@@ -4,6 +4,19 @@ let project = Project(
     name: "Demo",
     targets: [
         .target(
+            name: "DemoShared",
+            destinations: [.mac, .iPhone],
+            product: .framework,
+            bundleId: "dev.tuist.demo.shared",
+            deploymentTargets: .multiplatform(iOS: "17.0", macOS: "14.0"),
+            infoPlist: .default,
+            sources: ["shared/Sources/**"],
+            dependencies: [
+                .external(name: "DemoCore"),
+                .sdk(name: "SystemConfiguration", type: .framework, status: .required),
+            ]
+        ),
+        .target(
             name: "DemoMac",
             destinations: .macOS,
             product: .app,
@@ -15,8 +28,7 @@ let project = Project(
                 "macos/Resources",
             ],
             dependencies: [
-                .external(name: "DemoCore"),
-                .sdk(name: "SystemConfiguration", type: .framework, status: .required),
+                .target(name: "DemoShared"),
             ]
         ),
         .target(
@@ -26,7 +38,7 @@ let project = Project(
             bundleId: "dev.tuist.mac.demoTests",
             infoPlist: .default,
             buildableFolders: [
-                "macos/Tests"
+                "macos/Tests",
             ],
             dependencies: [.target(name: "DemoMac")]
         ),
@@ -42,8 +54,7 @@ let project = Project(
                 "ios/Resources",
             ],
             dependencies: [
-                .external(name: "DemoCore"),
-                .sdk(name: "SystemConfiguration", type: .framework, status: .required),
+                .target(name: "DemoShared"),
             ]
         ),
     ]

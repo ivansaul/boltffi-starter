@@ -8,13 +8,26 @@
 import DemoCore
 import SwiftUI
 
-struct AsyncValueView<T, Content: View, Loading: View, Error: View>: View {
+public struct AsyncValueView<T, Content: View, Loading: View, Error: View>: View {
     let state: AsyncValue<T>
-    @ViewBuilder let content: (T) -> Content
-    @ViewBuilder let loading: () -> Loading
-    @ViewBuilder let error: (Swift.Error) -> Error
+    let content: (T) -> Content
+    let loading: () -> Loading
+    let error: (Swift.Error) -> Error
 
-    var body: some View {
+    // Este es el constructor público necesario
+    public init(
+        state: AsyncValue<T>,
+        @ViewBuilder content: @escaping (T) -> Content,
+        @ViewBuilder loading: @escaping () -> Loading,
+        @ViewBuilder error: @escaping (Swift.Error) -> Error
+    ) {
+        self.state = state
+        self.content = content
+        self.loading = loading
+        self.error = error
+    }
+
+    public var body: some View {
         switch state {
         case .idle:
             EmptyView()
@@ -44,7 +57,7 @@ struct AsyncValueView<T, Content: View, Loading: View, Error: View>: View {
     }
 }
 
-enum AsyncValue<T> {
+public enum AsyncValue<T> {
     case idle
     case loading
     case data(T)
